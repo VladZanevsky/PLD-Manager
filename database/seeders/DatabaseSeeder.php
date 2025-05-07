@@ -31,13 +31,13 @@ class DatabaseSeeder extends Seeder
         $users = [
             [
                 'name' => 'Admin',
-                'email' => 'admin@example.com',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make('password'),
                 'role_id' => 1
             ],
             [
                 'name' => 'User',
-                'email' => 'user@example.com',
+                'email' => 'user@gmail.com',
                 'password' => Hash::make('password'),
                 'role_id' => 2
             ]
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
                 'power' => 4.0,
                 'io_count' => 100,
                 'cost' => 50.00,
-                'availability' => 'in_stock'
+                'availability' => 'В наличии'
             ],
             [
                 'manufacturer_id' => 2,
@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
                 'power' => 3.5,
                 'io_count' => 80,
                 'cost' => 40.00,
-                'availability' => 'in_stock'
+                'availability' => 'В наличии'
             ],
             [
                 'manufacturer_id' => 3,
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
                 'power' => 4.5,
                 'io_count' => 90,
                 'cost' => 60.00,
-                'availability' => 'on_order'
+                'availability' => 'Под заказ'
             ]
         ];
         foreach ($components as $data) {

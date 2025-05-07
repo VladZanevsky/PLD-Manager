@@ -1,4 +1,5 @@
 import './bootstrap';
+//import 'chart.js/dist/chart.umd.js';
 
 import Alpine from 'alpinejs';
 

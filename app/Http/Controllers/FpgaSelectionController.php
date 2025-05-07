@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class FpgaSelectionController extends Controller
 {
+    public function compare(Request $request)
+    {
+        $selectedIds = $request->input('selected', []);
+        $components = FpgaComponent::whereIn('id', $selectedIds)->with('standards')->get();
+        return view('compare', ['components' => $components]);
+    }
+
     public function select(Request $request)
     {
         // Получение входных данных
@@ -26,7 +33,7 @@ class FpgaSelectionController extends Controller
             ->get();
 
         if ($components->isEmpty()) {
-            return view('results', ['components' => [], 'message' => 'Нет подходящих ИСПЛ']);
+            return view('result', ['components' => [], 'message' => 'Нет подходящих ИСПЛ']);
         }
 
         // Нормализация параметров
@@ -73,6 +80,6 @@ class FpgaSelectionController extends Controller
         })->sortByDesc('score')->take(5);
 
         // Передача результатов в шаблон
-        return view('results', ['components' => $ranked, 'message' => null]);
+        return view('result', ['components' => $ranked, 'message' => null]);
     }
 }

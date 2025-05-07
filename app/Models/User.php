@@ -3,9 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Requests\UserRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -47,13 +49,50 @@ class User extends Authenticatable
         ];
     }
 
-    public function circuits()
-    {
-        return $this->hasMany(Circuit::class);
-    }
-
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public static function createUser(UserRequest $request)
+    {
+        $data = $request->validated();
+        $password = Str::password(
+            length: 8,
+        );
+        $data['password'] = bcrypt($password);
+
+        $user = User::query()->create($data);
+
+        if (!$user)
+        {
+            return false;
+        }
+
+        return $user;
+    }
+
+    public static function updateUser(UserRequest $request, User $user)
+    {
+        $data = $request->validated();
+
+        if ($data['password'])
+        {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        return $user->update($data);
+    }
+
+    public static function deleteUser(User $user)
+    {
+        if ($user->id == auth()->id())
+        {
+            return null;
+        }
+
+        return $user->delete();
     }
 }

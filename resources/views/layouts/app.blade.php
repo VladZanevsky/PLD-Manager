@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,700,900|Display+Playfair:200,300,400,700">
     <link rel="stylesheet" href="{{ asset('assets/front/fonts/icomoon/style.css') }}">
 
+    @vite([
+        'resources/assets/admin/plugins/select2/css/select2.css',
+        'resources/assets/admin/css/adminlte.min.css',
+    ])
     <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
@@ -155,6 +159,7 @@
 <script src="{{ asset('assets/front/js/jquery.magnific-popup.min.js') }}"></script>
 <script src="{{ asset('assets/front/js/aos.js') }}"></script>
 <script src="{{ asset('assets/front/js/main.js') }}"></script>
+<script src="{{ asset('assets/admin/js/admin.js') }}"></script>
 
 </body>
 </html>

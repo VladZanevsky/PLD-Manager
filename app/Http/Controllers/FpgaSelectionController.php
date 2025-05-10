@@ -22,10 +22,15 @@ class FpgaSelectionController extends Controller
             'lut_count' => 'nullable|numeric|min:0',
             'power' => 'nullable|numeric|min:0',
             'io_count' => 'nullable|numeric|min:0',
-            'priority' => 'required|in:frequency,lut_count,power,cost,io_count,balanced',
+            'priority' => 'nullable|in:frequency,lut_count,power,cost,io_count,balanced',
             'prefer_domestic' => 'nullable|boolean',
-            'standard_ids' => 'nullable|array', // Массив ID стандартов
-            'standard_ids.*' => 'exists:standards,id', // Каждый ID должен существовать
+            'standard_ids' => 'nullable|array',
+            'standard_ids.*' => 'exists:standards,id',
+            'weight_frequency' => 'nullable|numeric|min:0|max:100',
+            'weight_lut_count' => 'nullable|numeric|min:0|max:100',
+            'weight_power' => 'nullable|numeric|min:0|max:100',
+            'weight_cost' => 'nullable|numeric|min:0|max:100',
+            'weight_io_count' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Фильтрация компонентов
@@ -84,17 +89,38 @@ class FpgaSelectionController extends Controller
             return $component;
         });
 
-        // Определение весов на основе приоритета
-        $weights = [
-            'frequency' => ['frequency' => 0.3, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.175],
-            'lut_count' => ['frequency' => 0.175, 'lut_count' => 0.3, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.175],
-            'power' => ['frequency' => 0.175, 'lut_count' => 0.175, 'power' => 0.3, 'cost' => 0.175, 'io_count' => 0.175],
-            'cost' => ['frequency' => 0.175, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.3, 'io_count' => 0.175],
-            'io_count' => ['frequency' => 0.175, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.3],
-            'balanced' => ['frequency' => 0.2, 'lut_count' => 0.2, 'power' => 0.2, 'cost' => 0.2, 'io_count' => 0.2]
-        ];
-        $selectedWeights = $weights[$requirements['priority']];
+        // Если пользователь отправил свои веса, используем их
+        if (
+            isset($requirements['weight_frequency']) &&
+            isset($requirements['weight_lut_count']) &&
+            isset($requirements['weight_power']) &&
+            isset($requirements['weight_cost']) &&
+            isset($requirements['weight_io_count'])
+        ) {
+            $rawWeights = [
+                'frequency' => $requirements['weight_frequency'],
+                'lut_count' => $requirements['weight_lut_count'],
+                'power' => $requirements['weight_power'],
+                'cost' => $requirements['weight_cost'],
+                'io_count' => $requirements['weight_io_count'],
+            ];
+            $sum = array_sum($rawWeights);
+            $selectedWeights = $sum > 0
+                ? array_map(fn($weight) => $weight / $sum, $rawWeights)
+                : ['frequency' => 0.2, 'lut_count' => 0.2, 'power' => 0.2, 'cost' => 0.2, 'io_count' => 0.2];
+        } else {
+            // Предопределённые веса на основе priority (по умолчанию frequency)
 
+            $weights = [
+                'frequency' => ['frequency' => 0.3, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.175],
+                'lut_count' => ['frequency' => 0.175, 'lut_count' => 0.3, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.175],
+                'power' => ['frequency' => 0.175, 'lut_count' => 0.175, 'power' => 0.3, 'cost' => 0.175, 'io_count' => 0.175],
+                'cost' => ['frequency' => 0.175, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.3, 'io_count' => 0.175],
+                'io_count' => ['frequency' => 0.175, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.3],
+                'balanced' => ['frequency' => 0.2, 'lut_count' => 0.2, 'power' => 0.2, 'cost' => 0.2, 'io_count' => 0.2]
+            ];
+            $selectedWeights = $weights[$requirements['priority'] ?? 'frequency'];
+        }
         // Ранжирование
         $ranked = $normalized->map(function ($component) use ($selectedWeights, $requirements) {
             $component->score = $selectedWeights['frequency'] * $component->norm_frequency +

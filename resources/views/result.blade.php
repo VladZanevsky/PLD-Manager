@@ -1,12 +1,21 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container d-flex justify-content-center align-items-center">
+    <div class="container d-flex justify-content-center align-items-center" id="select-ispl">
         <div class="pb-4 pt-4">
             <h1 class="text-center pb-4">Результаты подбора</h1>
             @if($message)
                 <div class="alert alert-warning">{{ $message }}</div>
             @else
-                <form action="{{ route('fpga.compare') }}" method="POST">
+
+            @if(session('error'))
+                <div class="alert alert-danger text-center">{{ session('error') }}</div>
+            @endif
+
+                <div id="error-message" class="alert alert-danger text-center" style="display: none;">
+                    Выберите компоненты для сравнения
+                </div>
+
+                <form action="{{ route('fpga.compare') }}" method="POST" id="compare-form">
                     @csrf
                     <table class="table text-center">
                         <thead>
@@ -46,4 +55,25 @@
             @endif
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.getElementById('compare-form').addEventListener('submit', function(e) {
+            const selected = document.querySelectorAll('input[name="selected[]"]:checked');
+            const content = document.getElementById('select-ispl')
+            const errorMessage = document.getElementById('error-message');
+
+            if (selected.length === 0) {
+                e.preventDefault();
+                errorMessage.style.display = 'block';
+                content.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 10000);
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        });
+    </script>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FpgaComponent;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class FpgaSelectionController extends Controller
@@ -10,7 +11,13 @@ class FpgaSelectionController extends Controller
     public function compare(Request $request)
     {
         $selectedIds = $request->input('selected', []);
+        // Проверка, выбраны ли компоненты
+        // Минимальная серверная проверка
+        if (empty($selectedIds)) {
+            return redirect()->route('fpga.select')->with('error', 'Выберите компоненты для сравнения');
+        }
         $components = FpgaComponent::whereIn('id', $selectedIds)->with('standards')->get();
+        session()->put('comparison_components', $components);
         return view('compare', ['components' => $components]);
     }
 
@@ -143,5 +150,23 @@ class FpgaSelectionController extends Controller
 
         // Передача результатов в шаблон
         return view('result', ['components' => $ranked, 'message' => null]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        // Получаем компоненты из сессии
+        $components = session('comparison_components', collect([]));
+
+        // Получаем массив base64-изображений графиков
+        $chartImages = $request->input('chart_images', []);
+
+        // Загружаем PDF-шаблон
+        $pdf = Pdf::loadView('pdf.comparison', compact('components', 'chartImages'));
+
+        // Настраиваем параметры PDF
+        $pdf->setPaper('A4', 'portrait');
+
+        // Скачиваем PDF
+        return $pdf->download('compare_fpga.pdf');
     }
 }

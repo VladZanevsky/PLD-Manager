@@ -88,9 +88,15 @@
                     <input id="prefer_domestic" type="checkbox" name="prefer_domestic" class="form-check-input" value="1" {{ old('prefer_domestic') ? 'checked' : '' }}>
                     <label for="prefer_domestic" class="pl-3 form-check-label">Предпочтение отечественным ИСПЛ</label>
                 </div>
-                <div class="mt-2">
-                    <a href="#" class="pl-3 mt-6" id="toggle-advanced-settings">Расширенные настройки</a>
-                </div>
+                @auth
+                    <div class="mt-2">
+                        <a href="#" class="pl-3 mt-6" id="toggle-advanced-settings">Расширенные настройки</a>
+                    </div>
+                @else
+                    <div class="mt-2">
+                        <a href="{{ route('login') }}" class="pl-3 mt-6">Расширенные настройки доступны только для зарегистрированных пользователей</a>
+                    </div>
+                @endauth
                 <div class="d-flex justify-content-center align-items-center pb-3">
                     <button type="submit" class="btn btn-primary m-3 p-2">Подобрать</button>
                 </div>

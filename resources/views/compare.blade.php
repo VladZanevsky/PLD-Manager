@@ -33,15 +33,19 @@
             <div class="d-flex justify-content-center align-items-center">
                 <a href="#" onclick="history.back(); return false;" class="btn btn-secondary p-2 m-3">Вернуться к результатам</a>
                 <a href="#" onclick="event.preventDefault(); chart.resetZoom();" class="btn btn-info p-2 m-3">Сбросить масштаб</a>
-                <form action="{{ route('export.pdf') }}" method="POST" id="export-pdf-form">
-                    @csrf
-                    <input type="hidden" name="chart_images[frequency]" id="frequency_image">
-                    <input type="hidden" name="chart_images[lut]" id="lut_image">
-                    <input type="hidden" name="chart_images[power]" id="power_image">
-                    <input type="hidden" name="chart_images[io]" id="io_image">
-                    <input type="hidden" name="chart_images[cost]" id="cost_image">
-                    <button type="submit" class="btn btn-primary p-2 m-3">Экспорт в PDF</button>
-                </form>
+                @auth
+                    <form action="{{ route('export.pdf') }}" method="POST" id="export-pdf-form">
+                        @csrf
+                        <input type="hidden" name="chart_images[frequency]" id="frequency_image">
+                        <input type="hidden" name="chart_images[lut]" id="lut_image">
+                        <input type="hidden" name="chart_images[power]" id="power_image">
+                        <input type="hidden" name="chart_images[io]" id="io_image">
+                        <input type="hidden" name="chart_images[cost]" id="cost_image">
+                        <button type="submit" class="btn btn-primary p-2 m-3">Экспорт в PDF</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary p-2 m-3">Войдите, чтобы экспортировать в PDF</a>
+                @endauth
             </div>
         </div>
     </div>

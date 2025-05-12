@@ -120,11 +120,13 @@
                         </ul>
                     </div>
                     <div class="col-md-3">
-                        <h2 class="footer-heading mb-4">Наши соц. сети</h2>
-                        <a href="https://t.me/BlakeWashington" class="pl-0 pr-3"><span class="icon-telegram"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+                        <h2 class="footer-heading mb-4 text-center">Наши соц. сети</h2>
+                        <div class="row">
+                            <div class="col-md-3"><a href="https://t.me/BlakeWashington"><span class="icon-telegram"></span></a></div>
+                            <div class="col-md-3"><a href="#"><span class="icon-twitter"></span></a></div>
+                            <div class="col-md-3"><a href="#"><span class="icon-instagram"></span></a></div>
+                            <div class="col-md-3"><a href="#"><span class="icon-linkedin"></span></a></div>
+                        </div>
                     </div>
                 </div>
             </div>

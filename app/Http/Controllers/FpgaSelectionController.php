@@ -148,8 +148,13 @@ class FpgaSelectionController extends Controller
             return $component;
         })->sortByDesc('score')->take(5);
 
+        $maxScore = $components->max('score');
         // Передача результатов в шаблон
-        return view('result', ['components' => $ranked, 'message' => null]);
+        return view('result', [
+            'components' => $ranked,
+            'maxScore' => $maxScore,
+            'message' => null,
+        ]);
     }
 
     public function exportPdf(Request $request)

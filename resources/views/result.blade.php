@@ -33,6 +33,22 @@
                         </thead>
                         <tbody>
                         @foreach($components as $component)
+                            @php
+                            if (isset($maxScore))
+                                {
+                                    $relative = $component->score / $maxScore;
+                                    if ($component->score == $maxScore) {
+                                        $label = 'Лучший вариант';
+                                        $badgeClass = 'bg-success';
+                                    } elseif ($relative >= 0.75) {
+                                        $label = 'Хороший выбор';
+                                        $badgeClass = 'bg-warning text-dark';
+                                    } else {
+                                        $label = 'Средний вариант';
+                                        $badgeClass = 'bg-secondary';
+                                    }
+                                }
+                            @endphp
                             <tr>
                                 <td><input type="checkbox" name="selected[]" value="{{ $component->id }}"></td>
                                 <td>{{ $component->model }}</td>
@@ -42,7 +58,9 @@
                                 <td>{{ $component->power }}</td>
                                 <td>{{ $component->io_count }}</td>
                                 <td>{{ $component->cost }}</td>
-                                <td>{{ number_format($component->score, 3) }}</td>
+                                <td>{{ number_format($component->score, 3) }}<br>
+                                    <span class="badge {{ $badgeClass }}">{{ $label }}</span>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

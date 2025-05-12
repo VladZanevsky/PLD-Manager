@@ -43,14 +43,8 @@
 
                     <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
                         <li><a href="{{ route('home') }}" class="nav-link">Главная</a></li>
-                        <li class="has-children">
-                            <a href="#" class="nav-link">О нас</a>
-                            <ul class="dropdown">
-                                <li><a href="#" class="nav-link">How It Works</a></li>
-                                <li><a href="#" class="nav-link">Our Team</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#" class="nav-link">Контакты</a></li>
+                        <li><a href="{{ route('about') }}" class="nav-link">О нас</a></li>
+                        <li><a href="{{ route('contacts') }}" class="nav-link">Контакты</a></li>
                         @auth
                             {{-- Пользователь авторизован --}}
                             @if(Auth::user()->role->name === 'admin')
@@ -107,16 +101,15 @@
                 <div class="row">
                     <div class="col-md-6 mr-auto">
                         <h2 class="footer-heading mb-4">О нас</h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam iure deserunt ut architecto dolores quo beatae laborum aliquam ipsam rem impedit obcaecati ea consequatur.</p>
+                        <p>Система подбора ИСПЛ помогает инженерам и разработчикам быстро и просто находить подходящие компоненты. Проект разработан с учетом актуальных требований и стандартов. Все данные актуальны и постоянно обновляются.</p>
                     </div>
 
                     <div class="col-md-3">
                         <h2 class="footer-heading mb-4">Быстрое меню</h2>
                         <ul class="list-unstyled">
                             <li><a href="{{ route('home') }}">Главная</a></li>
-                            <li><a href="#">О нас</a></li>
-                            <li><a href="#">Услуги</a></li>
-                            <li><a href="#">Контакты</a></li>
+                            <li><a href="{{ route('about') }}">О нас</a></li>
+                            <li><a href="{{ route('contacts') }}">Контакты</a></li>
                             @auth()
                                 <li><a href="{{ route('logout') }}">Выход</a></li>
                             @else
@@ -128,7 +121,7 @@
                     </div>
                     <div class="col-md-3">
                         <h2 class="footer-heading mb-4">Наши соц. сети</h2>
-                        <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
+                        <a href="https://t.me/BlakeWashington" class="pl-0 pr-3"><span class="icon-telegram"></span></a>
                         <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
                         <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
                         <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>

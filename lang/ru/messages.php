@@ -5,6 +5,8 @@
 return [
     'site_name' => 'PLD-Manager',
     'main' => 'Главная',
+    'about' => 'О нас',
+    'contacts' => 'Контакты',
     'main_page' => 'Главная страница',
     'search' => 'Поиск',
     'more' => 'Подробнее',

@@ -8,14 +8,14 @@ use App\Http\Controllers\Admin\StandardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\FpgaSelectionController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('index');
-})->name('home');
-
+Route::get('/', [PageController::class, 'index'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/contacts', [PageController::class, 'contacts'])->name('contacts');
 Route::post('/select', [FpgaSelectionController::class, 'select'])->name('fpga.select');
 Route::post('/compare', [FpgaSelectionController::class, 'compare'])->name('fpga.compare');
 

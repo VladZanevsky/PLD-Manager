@@ -71,7 +71,7 @@
     <img src="{{ $chartImages['power'] }}" alt="График Энергопотребления">
 @endif
 @if(isset($chartImages['io']))
-    <h5>I/O</h5>
+    <h5>Количество входов/выходов (I/O)</h5>
     <img src="{{ $chartImages['io'] }}" alt="График I/O">
 @endif
 @if(isset($chartImages['cost']))

@@ -146,6 +146,10 @@
                 slider.disabled = !isHidden;
             });
             this.textContent = isHidden ? 'Скрыть расширенные настройки' : 'Расширенные настройки';
+            if(isHidden)
+            {
+                advancedSettings.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         });
     </script>
 

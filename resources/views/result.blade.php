@@ -52,7 +52,7 @@
                             <tr>
                                 <td><input type="checkbox" name="selected[]" value="{{ $component->id }}"></td>
                                 <td>{{ $component->model }}</td>
-                                <td>{{ $component->manufacturer->name }}</td>
+                                <td>{{ $component->manufacturer->name . ' (' . $component->manufacturer->country . ')' }}</td>
                                 <td>{{ $component->frequency }}</td>
                                 <td>{{ $component->lut_count }}</td>
                                 <td>{{ $component->power }}</td>

@@ -2,8 +2,6 @@
 @section('content')
     <div class="container d-flex justify-content-center align-items-center" id="select-ispl" style="min-height: 100vh;">
         <div class="p-4 col-md-6 position-relative">
-
-
             <!-- Форма -->
             <h1 class="text-center p-3">Подбор ИСПЛ</h1>
             <form action="{{ route('fpga.select') }}" method="POST">

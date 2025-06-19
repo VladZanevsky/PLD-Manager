@@ -23,7 +23,6 @@
             </table>
             <canvas id="comparisonChart"></canvas>
 
-            <!-- Скрытые canvas для PDF-графиков -->
             <canvas id="frequencyChart" style="display: none;"></canvas>
             <canvas id="lutChart" style="display: none;"></canvas>
             <canvas id="powerChart" style="display: none;"></canvas>
@@ -96,8 +95,6 @@
                     }
                 }
             });
-            // При отправке формы сохраняем изображение графика
-            // Данные для графиков
             const components = @json($components);
             const models = components.map(c => c.model);
 
@@ -126,14 +123,12 @@
                 });
             }
 
-            // Создание скрытых графиков для PDF
             const frequencyChart = createPdfChart('frequencyChart', 'Частота (МГц)', components.map(c => c.frequency), Math.max(...components.map(c => c.frequency)));
             const lutChart = createPdfChart('lutChart', 'LUT', components.map(c => c.lut_count), Math.max(...components.map(c => c.lut_count)));
             const powerChart = createPdfChart('powerChart', 'Энергопотребление (Вт)', components.map(c => c.power), Math.max(...components.map(c => c.power)));
             const ioChart = createPdfChart('ioChart', 'I/O', components.map(c => c.io_count), Math.max(...components.map(c => c.io_count)));
             const costChart = createPdfChart('costChart', 'Стоимость', components.map(c => c.cost), Math.max(...components.map(c => c.cost)));
 
-            // Сохранение изображений графиков при отправке формы
             document.getElementById('export-pdf-form').addEventListener('submit', function(e) {
                 document.getElementById('frequency_image').value = frequencyChart.toBase64Image();
                 document.getElementById('lut_image').value = lutChart.toBase64Image();

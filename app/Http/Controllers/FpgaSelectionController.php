@@ -11,8 +11,6 @@ class FpgaSelectionController extends Controller
     public function compare(Request $request)
     {
         $selectedIds = $request->input('selected', []);
-        // Проверка, выбраны ли компоненты
-        // Минимальная серверная проверка
         if (empty($selectedIds)) {
             return redirect()->route('fpga.select')->with('error', 'Выберите компоненты для сравнения');
         }
@@ -23,7 +21,6 @@ class FpgaSelectionController extends Controller
 
     public function select(Request $request)
     {
-        // Валидация входных данных
         $requirements = $request->validate([
             'frequency' => 'nullable|numeric|min:0',
             'lut_count' => 'nullable|numeric|min:0',
@@ -40,9 +37,8 @@ class FpgaSelectionController extends Controller
             'weight_io_count' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        // Фильтрация компонентов
         $components = FpgaComponent::query()
-            ->with('manufacturer') // Жадная загрузка связи manufacturer
+            ->with('manufacturer')
             ->when($requirements['frequency'] !== null, function ($query) use ($requirements) {
                 $query->where('frequency', '>=', $requirements['frequency']);
             })
@@ -116,7 +112,6 @@ class FpgaSelectionController extends Controller
                 ? array_map(fn($weight) => $weight / $sum, $rawWeights)
                 : ['frequency' => 0.2, 'lut_count' => 0.2, 'power' => 0.2, 'cost' => 0.2, 'io_count' => 0.2];
         } else {
-            // Предопределённые веса на основе priority (по умолчанию frequency)
 
             $weights = [
                 'frequency' => ['frequency' => 0.3, 'lut_count' => 0.175, 'power' => 0.175, 'cost' => 0.175, 'io_count' => 0.175],
@@ -136,20 +131,19 @@ class FpgaSelectionController extends Controller
                 $selectedWeights['cost'] * $component->norm_cost +
                 $selectedWeights['io_count'] * $component->norm_io_count;
 
-            // Бонус для отечественных компонентов (Беларусь или Россия)
             if (isset($requirements['prefer_domestic']) &&
                 $requirements['prefer_domestic'] &&
                 $component->manufacturer &&
                 in_array(mb_strtolower(trim($component->manufacturer->country)), ['беларусь', 'россия']))
             {
-                $component->score *= 1.2; // Увеличиваем score на 20%
+                $component->score *= 1.2;
             }
 
             return $component;
         })->sortByDesc('score')->take(5);
 
         $maxScore = $components->max('score');
-        // Передача результатов в шаблон
+
         return view('result', [
             'components' => $ranked,
             'maxScore' => $maxScore,
@@ -159,19 +153,14 @@ class FpgaSelectionController extends Controller
 
     public function exportPdf(Request $request)
     {
-        // Получаем компоненты из сессии
         $components = session('comparison_components', collect([]));
 
-        // Получаем массив base64-изображений графиков
         $chartImages = $request->input('chart_images', []);
 
-        // Загружаем PDF-шаблон
         $pdf = Pdf::loadView('pdf.comparison', compact('components', 'chartImages'));
 
-        // Настраиваем параметры PDF
         $pdf->setPaper('A4', 'portrait');
 
-        // Скачиваем PDF
         return $pdf->download('compare_fpga.pdf');
     }
 }
